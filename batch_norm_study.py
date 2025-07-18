@@ -21,6 +21,7 @@ def run_once(random_seed):
 
     model = Model()
 
+    # This is how to register a forward hook to a batch norm layer.
     model.layer4.batch_norm.register_forward_hook(lambda module, input, output: save_activations_hook('layer4_output', module, input, output))
 
     optimizer = optim.Adam(model.parameters(), lr=0.01)
@@ -52,6 +53,7 @@ def run_once(random_seed):
         print(input.shape, output.shape)
         torch.set_printoptions(precision=2, sci_mode=False)
         
+        # See how the input is whitened (max value supressed because of normalization.)
         print(input[0])
         print(output[0])
 
