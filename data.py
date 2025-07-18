@@ -1,3 +1,6 @@
+import torch
+import random
+
 relationships = [
     ("Penelope", "has_husband", ["Christopher"]),
     ("Christine", "has_husband", ["Andrew"]),
@@ -104,3 +107,38 @@ relationships = [
     ("Alfonso", "has_sister", ["Sophia"]),
     ("Marco", "has_sister", ["Angela"]),
 ]
+
+def prepare_data():
+    train_num = 100
+    random.shuffle(relationships)
+
+    names = set([name for name, _, _ in relationships])
+    names = list(names)
+    names.sort()
+    
+    relations = set([relation for _, relation, _ in relationships])
+    relations = list(relations)
+    relations.sort()
+
+    name_to_index = {name: i for i, name in enumerate(names)}
+    relation_to_index = {relation: i for i, relation in enumerate(relations)}
+
+    name_inputs = torch.zeros(len(relationships), len(names))
+    relation_inputs = torch.zeros(len(relationships), len(relations))
+    name_outputs = torch.zeros(len(relationships), len(names))
+
+    for i, (name_input, relation_input, output) in enumerate(relationships):
+        name_inputs[i][name_to_index[name_input]] = 1
+        relation_inputs[i][relation_to_index[relation_input]] = 1
+        for output_name in output:
+            name_outputs[i][name_to_index[output_name]] = 1
+
+    train_name_inputs = name_inputs[:train_num]
+    train_relation_inputs = relation_inputs[:train_num]
+    train_name_outputs = name_outputs[:train_num]
+
+    test_name_inputs = name_inputs[train_num:]
+    test_relation_inputs = relation_inputs[train_num:]
+    test_name_outputs = name_outputs[train_num:]
+
+    return train_name_inputs, train_relation_inputs, train_name_outputs, test_name_inputs, test_relation_inputs, test_name_outputs
