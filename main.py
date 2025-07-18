@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 from data import relationships
 from collections import defaultdict
+import random
 
 class Layer(nn.Module):
     def __init__(self, input_size, output_size):
@@ -39,6 +40,7 @@ class Model(nn.Module):
 
 def prepare_data():
     train_num = 100
+    random.shuffle(relationships)
 
     names = set([name for name, _, _ in relationships])
     names = list(names)
@@ -74,6 +76,7 @@ def prepare_data():
 
 def run_once(random_seed):
     torch.manual_seed(random_seed)
+    random.seed(random_seed)
 
     train_name_inputs, train_relation_inputs, train_name_outputs, test_name_inputs, test_relation_inputs, test_name_outputs = prepare_data()
 
@@ -96,7 +99,7 @@ def run_once(random_seed):
         test_outputs = model(test_name_inputs, test_relation_inputs)
         test_acc = (sum(test_outputs.argmax(dim=1) == test_name_outputs.argmax(dim=1)) / len(test_outputs))
         train_acc = (sum(outputs.argmax(dim=1) == train_name_outputs.argmax(dim=1)) / len(train_name_outputs))
-        print(random_seed, test_acc.item(), f"{train_acc.item():.2f}")
+        print(random_seed, f"{test_acc.item():.2f}", f"{train_acc.item():.2f}")
         return test_acc.item()
 
 
