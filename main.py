@@ -19,16 +19,13 @@ def run_once(random_seed):
     metric = MultilabelAccuracy()
     
     model.train()
-    for i in range(2000):
+    for i in range(1500):
         optimizer.zero_grad()
         outputs = model(train_name_inputs, train_relation_inputs)
         loss = criterion(outputs, train_name_outputs)
         loss.backward()
         optimizer.step()
-        # metric.update(outputs.detach(), train_name_outputs.detach())
-        # if i % 100 == 0:
-        #     print(i, loss.item(), metric.compute().item())
-        # metric.reset()
+
     
     model.eval()
     metric.reset()
