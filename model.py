@@ -21,8 +21,9 @@ class Model(nn.Module):
         self.layer1_2 = Layer(12, 6)
 
         self.layer2 = Layer(12, 6)
-        self.layer3 = Layer(6, 24)
-        self.layer4 = nn.Linear(24, 24)
+        self.layer3 = Layer(6, 12)
+        self.layer4 = Layer(12, 24)
+        self.layer5 = nn.Linear(24, 24)
         
     def forward(self, x_1, x_2):
         out_1 = self.layer1_1(x_1)
@@ -31,4 +32,5 @@ class Model(nn.Module):
         out = self.layer2(out)
         out = self.layer3(out)
         out = self.layer4(out)
+        out = self.layer5(out)
         return out
