@@ -108,21 +108,17 @@ relationships = [
     ("Marco", "has_sister", ["Angela"]),
 ]
 
+names = sorted(list(set([name for name, _, _ in relationships])))
+relations = sorted(list(set([relation for _, relation, _ in relationships])))
+
+name_to_index = {name: i for i, name in enumerate(names)}
+relation_to_index = {relation: i for i, relation in enumerate(relations)}
+
+train_num = 100
+
 def prepare_data():
-    train_num = 100
     random.shuffle(relationships)
-
-    names = set([name for name, _, _ in relationships])
-    names = list(names)
-    names.sort()
     
-    relations = set([relation for _, relation, _ in relationships])
-    relations = list(relations)
-    relations.sort()
-
-    name_to_index = {name: i for i, name in enumerate(names)}
-    relation_to_index = {relation: i for i, relation in enumerate(relations)}
-
     name_inputs = torch.zeros(len(relationships), len(names))
     relation_inputs = torch.zeros(len(relationships), len(relations))
     name_outputs = torch.zeros(len(relationships), len(names))

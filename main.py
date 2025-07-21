@@ -5,7 +5,8 @@ from data import prepare_data
 import random
 from model import Model
 from torcheval.metrics import MultilabelAccuracy
-
+from visualizer import visualize
+import os
 
 def run_once(random_seed):
     torch.manual_seed(random_seed)
@@ -25,21 +26,31 @@ def run_once(random_seed):
         loss = criterion(outputs, train_name_outputs)
         loss.backward()
         optimizer.step()
-
     
     model.eval()
     metric.reset()
     with torch.no_grad():
         test_outputs = model(test_name_inputs, test_relation_inputs)
         metric.update(test_outputs.detach(), test_name_outputs.detach())
-        print(random_seed, metric.compute().item())
-        return metric.compute().item()
+        test_acc = metric.compute().item()
+        print(f"random_seed: {random_seed}, test_acc: {test_acc}")
+
+        torch.save(model.state_dict(), f"model_weights/model_{random_seed}.pth")
+        return test_acc
 
 
 if __name__ == "__main__":
+    os.makedirs("model_weights", exist_ok=True)
+    os.makedirs("plots", exist_ok=True)
+    
     total_run = 50
+    print(f"Training and evaluating with {total_run} random seeds")
     test_accs = []
     for i in range(total_run):
         test_acc = run_once(i)
         test_accs.append(test_acc)
-    print(sum(test_accs) / total_run)
+        visualize(i)
+    print(f"Average test accuracy: {sum(test_accs) / total_run}")
+
+
+    
