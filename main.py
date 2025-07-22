@@ -26,7 +26,7 @@ def run_once(random_seed):
     metric = MultilabelAccuracy()
     
     model.train()
-    for i in range(1500):
+    for i in range(2000):
         optimizer.zero_grad()
         outputs = model(train_name_inputs, train_relation_inputs)
         loss = criterion(outputs, train_name_outputs)
