@@ -52,9 +52,13 @@ if __name__ == "__main__":
     total_run = 50
     print(f"Training and evaluating with {total_run} random seeds")
     test_accs = []
+    total_perfect_accs = 0
     for i in range(total_run):
         test_acc = run_once(i)
         test_accs.append(test_acc)
         if args.visualize:
             visualize(i)
+        if test_acc > 0.99:
+            total_perfect_accs += 1
     print(f"Average test accuracy: {sum(test_accs) / total_run}")
+    print(f"Total perfect accuracies percentage: {total_perfect_accs / total_run}")
