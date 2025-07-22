@@ -8,11 +8,15 @@ from torcheval.metrics import MultilabelAccuracy
 from visualizer import visualize
 import os
 import argparse
+from torch.optim.lr_scheduler import LambdaLR
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-v", "--visualize", action="store_true")
 parser.add_argument("-s", "--save_model", action="store_true")
 args = parser.parse_args()
+
+def linear_warmup(step, warmup_steps):
+    return min(1.0, step / warmup_steps)
 
 def run_once(random_seed):
     torch.manual_seed(random_seed)
@@ -24,7 +28,8 @@ def run_once(random_seed):
     optimizer = optim.AdamW(model.parameters(), lr=0.01)
     criterion = nn.MSELoss()
     metric = MultilabelAccuracy()
-    
+    scheduler = LambdaLR(optimizer, lr_lambda=lambda step: linear_warmup(step, 200))
+
     model.train()
     for i in range(2000):
         optimizer.zero_grad()
@@ -32,7 +37,8 @@ def run_once(random_seed):
         loss = criterion(outputs, train_name_outputs)
         loss.backward()
         optimizer.step()
-    
+        scheduler.step()
+
     model.eval()
     metric.reset()
     with torch.no_grad():
