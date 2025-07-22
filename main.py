@@ -22,7 +22,7 @@ def run_once(random_seed):
 
     model = Model()
     optimizer = optim.AdamW(model.parameters(), lr=0.01)
-    criterion = nn.BCEWithLogitsLoss()
+    criterion = nn.MSELoss()
     metric = MultilabelAccuracy()
     
     model.train()
