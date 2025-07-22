@@ -7,6 +7,12 @@ from model import Model
 from torcheval.metrics import MultilabelAccuracy
 from visualizer import visualize
 import os
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-v", "--visualize", action="store_true")
+parser.add_argument("-s", "--save_model", action="store_true")
+args = parser.parse_args()
 
 def run_once(random_seed):
     torch.manual_seed(random_seed)
@@ -15,7 +21,7 @@ def run_once(random_seed):
     train_name_inputs, train_relation_inputs, train_name_outputs, test_name_inputs, test_relation_inputs, test_name_outputs = prepare_data()
 
     model = Model()
-    optimizer = optim.Adam(model.parameters(), lr=0.01)
+    optimizer = optim.AdamW(model.parameters(), lr=0.01)
     criterion = nn.BCEWithLogitsLoss()
     metric = MultilabelAccuracy()
     
@@ -34,23 +40,21 @@ def run_once(random_seed):
         metric.update(test_outputs.detach(), test_name_outputs.detach())
         test_acc = metric.compute().item()
         print(f"random_seed: {random_seed}, test_acc: {test_acc}")
-
-        torch.save(model.state_dict(), f"model_weights/model_{random_seed}.pth")
+        if args.save_model:
+            torch.save(model.state_dict(), f"model_weights/model_{random_seed}.pth")
         return test_acc
 
 
 if __name__ == "__main__":
     os.makedirs("model_weights", exist_ok=True)
     os.makedirs("plots", exist_ok=True)
-    
+
     total_run = 50
     print(f"Training and evaluating with {total_run} random seeds")
     test_accs = []
     for i in range(total_run):
         test_acc = run_once(i)
         test_accs.append(test_acc)
-        visualize(i)
+        if args.visualize:
+            visualize(i)
     print(f"Average test accuracy: {sum(test_accs) / total_run}")
-
-
-    
