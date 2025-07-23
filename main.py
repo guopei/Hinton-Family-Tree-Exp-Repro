@@ -18,6 +18,8 @@ args = parser.parse_args()
 def linear_warmup(step, warmup_steps):
     return min(1.0, step / warmup_steps)
 
+train_epochs = 4000
+
 def run_once(random_seed):
     torch.manual_seed(random_seed)
     random.seed(random_seed)
@@ -28,10 +30,10 @@ def run_once(random_seed):
     optimizer = optim.AdamW(model.parameters(), lr=0.01)
     criterion = nn.MSELoss()
     metric = MultilabelAccuracy()
-    scheduler = LambdaLR(optimizer, lr_lambda=lambda step: linear_warmup(step, 200))
+    scheduler = LambdaLR(optimizer, lr_lambda=lambda step: linear_warmup(step, train_epochs // 10))
 
     model.train()
-    for i in range(2000):
+    for i in range(train_epochs):
         optimizer.zero_grad()
         outputs = model(train_name_inputs, train_relation_inputs)
         loss = criterion(outputs, train_name_outputs)

@@ -137,4 +137,9 @@ def prepare_data():
     test_relation_inputs = relation_inputs[train_num:]
     test_name_outputs = name_outputs[train_num:]
 
+    # Training set soft labels
+
+    # train_name_outputs[train_name_outputs == 1] = 0.8
+    # train_name_outputs[train_name_outputs == 0] = 0.2
+
     return train_name_inputs, train_relation_inputs, train_name_outputs, test_name_inputs, test_relation_inputs, test_name_outputs
