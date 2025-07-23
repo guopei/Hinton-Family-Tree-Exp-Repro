@@ -2,22 +2,22 @@ Reproduction of Hinton's 1986 experiment on family tree prediction from the pape
 
 ## Installation (Optional)
 
-If you haven't installed uv, install it from [here](https://docs.astral.sh/uv/#installation).
+If you haven't installed `uv`, install it from [here](https://docs.astral.sh/uv/#installation).
 
 ## Main Result
 
-Run
+After installion of `uv`, simply run
 
 `uv run main.py`
 
-You'll get:
+The required packages will be installed for you and you'll get:
 
 ```
 Average test accuracy: 0.67
 Total perfect accuracies percentage: 0.2
 ```
 
-If everything goes well.
+in the end. Feel free to change anything (model architecture / optimizer / loss, etc) and let me know if you can beat this number. :)
 
 ## Visualization
 
