@@ -30,6 +30,7 @@ def run_once(random_seed):
     optimizer = optim.AdamW(model.parameters(), lr=0.01)
     criterion = nn.MSELoss()
     metric = MultilabelAccuracy()
+    # Linear warmup
     scheduler = LambdaLR(optimizer, lr_lambda=lambda step: linear_warmup(step, train_epochs // 10))
 
     model.train()
