@@ -18,3 +18,11 @@ Total perfect accuracies percentage: 0.2
 ```
 
 If everything goes well.
+
+## Visualization
+
+Run
+
+`uv run main.py -s -v`
+
+to save the model weights and generate visualizations of first layer weights similar to the paper.
