@@ -12,5 +12,3 @@ wheels/
 # Pytorch model files
 *.pth
 
-# Plots
-*.png
