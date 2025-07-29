@@ -40,6 +40,7 @@ def run_once(random_seed):
         shuffled_indices = torch.randperm(len(train_name_inputs))
         outputs = model(train_name_inputs[shuffled_indices], train_relation_inputs[shuffled_indices])
         loss = criterion(outputs, train_name_outputs[shuffled_indices])
+
         loss.backward()
         optimizer.step()
         scheduler.step()
@@ -53,7 +54,8 @@ def run_once(random_seed):
         test_acc = metric.compute().item()
         metric.reset()
         train_outputs = model(train_name_inputs, train_relation_inputs)
-        metric.update(train_outputs.detach(), train_name_outputs.detach())
+        train_name_outputs_clone = train_name_outputs.detach() > 0.5
+        metric.update(train_outputs.detach(), train_name_outputs_clone)
         train_acc = metric.compute().item()
 
         print(f"random_seed: {random_seed:02d}, test_acc: {test_acc:.2f}, train_acc: {train_acc:.2f}, loss: {loss.item():.4f}")

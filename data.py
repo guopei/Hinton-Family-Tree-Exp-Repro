@@ -115,6 +115,8 @@ name_to_index = {name: i for i, name in enumerate(names)}
 relation_to_index = {relation: i for i, relation in enumerate(relations)}
 
 train_num = 100
+low_value = -0.1
+high_value = 1.1
 
 def prepare_data():
     random.shuffle(relationships)
@@ -132,6 +134,9 @@ def prepare_data():
     train_name_inputs = name_inputs[:train_num]
     train_relation_inputs = relation_inputs[:train_num]
     train_name_outputs = name_outputs[:train_num]
+
+    train_name_outputs[train_name_outputs == 0] = low_value
+    train_name_outputs[train_name_outputs == 1] = high_value
 
     test_name_inputs = name_inputs[train_num:]
     test_relation_inputs = relation_inputs[train_num:]
