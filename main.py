@@ -18,7 +18,7 @@ args = parser.parse_args()
 def linear_warmup(step, warmup_steps):
     return min(1.0, step / warmup_steps)
 
-train_epochs = 2000
+train_epochs = 4000
 
 def run_once(random_seed):
     torch.manual_seed(random_seed)
@@ -27,7 +27,7 @@ def run_once(random_seed):
     train_name_inputs, train_relation_inputs, train_name_outputs, test_name_inputs, test_relation_inputs, test_name_outputs = prepare_data()
 
     model = Model()
-    optimizer = optim.AdamW(model.parameters(), lr=0.01)
+    optimizer = optim.AdamW(model.parameters(), lr=0.02)
     criterion = nn.MSELoss()
     metric = MultilabelAccuracy()
     # Linear warmup
