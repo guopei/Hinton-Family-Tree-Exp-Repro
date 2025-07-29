@@ -7,7 +7,7 @@ class Layer(nn.Module):
         self.linear = nn.Linear(input_size, output_size, bias=False)
         self.sigmoid = nn.Sigmoid()
         self.batch_norm = nn.BatchNorm1d(output_size)
-        
+
     def forward(self, x):
         out = self.linear(x)
         out = self.sigmoid(out)
