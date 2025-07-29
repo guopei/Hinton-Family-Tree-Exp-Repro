@@ -36,12 +36,10 @@ def run_once(random_seed):
     model.train()
     for i in range(train_epochs):
         optimizer.zero_grad()
-        outputs = model(train_name_inputs, train_relation_inputs)
-        loss = criterion(outputs, train_name_outputs)
 
-        # shuffled_indices = torch.randperm(len(train_name_inputs))
-        # outputs = model(train_name_inputs[shuffled_indices], train_relation_inputs[shuffled_indices])
-        # loss = criterion(outputs, train_name_outputs[shuffled_indices])
+        shuffled_indices = torch.randperm(len(train_name_inputs))
+        outputs = model(train_name_inputs[shuffled_indices], train_relation_inputs[shuffled_indices])
+        loss = criterion(outputs, train_name_outputs[shuffled_indices])
         loss.backward()
         optimizer.step()
         scheduler.step()
@@ -54,12 +52,11 @@ def run_once(random_seed):
         metric.update(test_outputs.detach(), test_name_outputs.detach())
         test_acc = metric.compute().item()
         metric.reset()
-        metric.update(outputs.detach(), train_name_outputs.detach())
+        train_outputs = model(train_name_inputs, train_relation_inputs)
+        metric.update(train_outputs.detach(), train_name_outputs.detach())
         train_acc = metric.compute().item()
 
         print(f"random_seed: {random_seed:02d}, test_acc: {test_acc:.2f}, train_acc: {train_acc:.2f}, loss: {loss.item():.4f}")
-        # for name, param in model.named_parameters():
-        #     print(f"{name}: {param.data.mean():.4f}, {param.data.std():.4f}")
         if args.save_model:
             torch.save(model.state_dict(), f"model_weights/model_{random_seed}.pth")
         return test_acc
