@@ -4,7 +4,7 @@ import torch.nn as nn
 class Layer(nn.Module):
     def __init__(self, input_size, output_size):
         super(Layer, self).__init__()
-        self.linear = nn.Linear(input_size, output_size)
+        self.linear = nn.Linear(input_size, output_size, bias=False)
         self.sigmoid = nn.Sigmoid()
         self.batch_norm = nn.BatchNorm1d(output_size)
         
