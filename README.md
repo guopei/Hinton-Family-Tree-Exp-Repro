@@ -13,8 +13,8 @@ After installion of `uv`, simply run
 The required packages will be installed for you and you'll get:
 
 ```
-Average test accuracy: 0.67
-Total perfect accuracies percentage: 0.2
+Average test accuracy: 0.74
+Total perfect accuracies percentage: 0.24
 ```
 
 in the end. Feel free to change anything (model architecture / optimizer / loss, etc) and let me know if you can beat this number. :)
